@@ -1,5 +1,6 @@
 package UI;
 
+import data.TemperatureConverter;
 import data.URLReader;
 import data.Weather;
 import data.WeatherURLParser;
@@ -9,8 +10,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javax.xml.parsers.ParserConfigurationException;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -25,23 +27,30 @@ public class FXMLDocumentController {
     @FXML
     private Button getWeatherInfoButton;
     @FXML
-    private TextArea weatherInfoTextArea;
+    private TextField temperatureInfoTextField;
+    @FXML
+    private TextField weatherInfoTextField;
+    @FXML
+    private TextField windSpeedInfoTextField;
 
     @FXML
-    private void handleButtonAction(ActionEvent event) {
+    private void handleButtonAction(ActionEvent event) throws SAXException, ParserConfigurationException {
         try {
             getWeatherInfo();
-        } catch (IOException e) {
-            System.out.println(e);
+        } catch (Exception e) {
+           weatherInfoTextField.setText("Weather info not found");
         }
-        System.out.println("Hello world");
     }
 
-    private void getWeatherInfo() throws IOException {
+    private void getWeatherInfo() throws IOException, SAXException, ParserConfigurationException {
         URL url = new URL(new WeatherURLParser(enterCityTextField.getText()).getFullUrl());
         Weather w = new Weather(new URLReader(url).getContent());
-        weatherInfoTextArea.setText("Weather: " + w.getMap().get("weather")
-                + "\nTemperature: " + w.getMap().get("temperature"));
+        TemperatureConverter converter = new TemperatureConverter();
+        double temperature = converter.kelvinToCelsius(w.getMap().get("temperature"));
+        
+        weatherInfoTextField.setText(w.getMap().get("weather"));
+        temperatureInfoTextField.setText(temperature + " C");
+        windSpeedInfoTextField.setText(w.getMap().get("windSpeed"));
     }
 
 }
