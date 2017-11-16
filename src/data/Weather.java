@@ -20,33 +20,25 @@ public class Weather {
     private HashMap<String, String> map;
 
     public Weather(String content) throws SAXException, IOException, ParserConfigurationException {
-        System.out.println(content);
 
         map = new HashMap<>();
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 
-        
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 
             doc = dBuilder.parse(new InputSource(new StringReader(content)));
-
             doc.getDocumentElement().normalize();
             parseCurrentData();
     }
 
     private void parseCurrentData() {
-
         NodeList nodes = doc.getElementsByTagName("current");
-
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
+            Node node = nodes.item(0);
             Element e = (Element) node;
 
             map.put("weather", getValue("weather", e, "value"));
             map.put("temperature", getValue("temperature", e, "max"));
             map.put("windSpeed", getValue("speed", e, "value"));
-            
-        }
     }
 
     private String getValue(String tag, Element e, String attr) {

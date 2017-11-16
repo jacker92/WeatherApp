@@ -1,5 +1,6 @@
 package UI;
 
+import data.FontColorChanger;
 import data.TemperatureConverter;
 import data.URLReader;
 import data.Weather;
@@ -47,10 +48,13 @@ public class FXMLDocumentController {
         Weather w = new Weather(new URLReader(url).getContent());
         TemperatureConverter converter = new TemperatureConverter();
         double temperature = converter.kelvinToCelsius(w.getMap().get("temperature"));
+        FontColorChanger fcc = new FontColorChanger(temperature);
         
         weatherInfoTextField.setText(w.getMap().get("weather"));
         temperatureInfoTextField.setText(temperature + " C");
         windSpeedInfoTextField.setText(w.getMap().get("windSpeed"));
+        temperatureInfoTextField = fcc.getNewColorForTemperature(temperatureInfoTextField);
+        
     }
 
 }
