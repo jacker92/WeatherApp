@@ -48,11 +48,12 @@ public class FXMLDocumentController {
         Weather w = new Weather(new URLReader(url).getContent());
         TemperatureConverter converter = new TemperatureConverter();
         double temperature = converter.kelvinToCelsius(w.getMap().get("temperature"));
-        FontColorChanger fcc = new FontColorChanger(temperature);
+        double windSpeed = Double.parseDouble(w.getMap().get("windSpeed"));
+        FontColorChanger fcc = new FontColorChanger(temperature, windSpeed);
         
         weatherInfoTextField.setText(w.getMap().get("weather"));
         temperatureInfoTextField.setText(temperature + " C");
-        windSpeedInfoTextField.setText(w.getMap().get("windSpeed"));
+        windSpeedInfoTextField.setText(windSpeed+"");
         temperatureInfoTextField = fcc.getNewColorForTemperature(temperatureInfoTextField);
         
     }
